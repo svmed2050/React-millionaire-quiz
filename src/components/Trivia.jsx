@@ -1,27 +1,22 @@
 import { useEffect, useState } from 'react'
-import useSound from 'use-sound'
-import correct from '../sounds/correct.mp3'
-import play from '../sounds/play.mp3'
-import wait from '../sounds/wait.mp3'
-import wrong from '../sounds/wrong.mp3'
 
-const Trivia = ({ data, setStop, questionNumber, setQuestionNumber }) => {
+const Trivia = ({
+	data,
+	setStop,
+	questionNumber,
+	setQuestionNumber,
+	musicObj,
+}) => {
 	const [question, setQuestion] = useState(null)
 	const [selectedAnswer, setSelectedAnswer] = useState(null)
 	const [className, setClassName] = useState('answer')
-	const [letsPlay, { stop: stopPlay }] = useSound(play, { volume: 0.03 })
-	const [correctAnswer, { stop: stopCorrect }] = useSound(correct, {
-		volume: 0.03,
-	})
-	const [wrongAnswer, { stop: stopWrong }] = useSound(wrong, { volume: 0.03 })
-	const [waitForAnswer, { stop: stopWait }] = useSound(wait, { volume: 0.03 })
 
 	useEffect(() => {
-		letsPlay()
+		musicObj.letsPlay()
 		setTimeout(() => {
-			stopPlay()
+			musicObj.stopPlay()
 		}, 4500)
-	}, [letsPlay])
+	}, [])
 
 	useEffect(() => {
 		setQuestion(data[questionNumber - 1])
@@ -42,13 +37,13 @@ const Trivia = ({ data, setStop, questionNumber, setQuestionNumber }) => {
 		)
 		delay(5000, () => {
 			if (a.correct) {
-				correctAnswer()
+				musicObj.correctAnswer()
 				delay(1000, () => {
 					setQuestionNumber((prev) => prev + 1)
 					setSelectedAnswer(null)
 				})
 			} else {
-				wrongAnswer()
+				musicObj.wrongAnswer()
 				delay(1000, () => {
 					setStop(true)
 				})

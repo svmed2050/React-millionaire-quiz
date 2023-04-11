@@ -4,11 +4,34 @@ import Trivia from './components/Trivia'
 import Timer from './components/Timer'
 import Start from './components/Start'
 
+import useSound from 'use-sound'
+import correct from './sounds/correct.mp3'
+import play from './sounds/play.mp3'
+import wait from './sounds/wait.mp3'
+import wrong from './sounds/wrong.mp3'
+
 function App() {
 	const [username, setUsername] = useState(null)
 	const [questionNumber, setQuestionNumber] = useState(1)
 	const [stop, setStop] = useState(false)
 	const [earned, setEarned] = useState('$ 0')
+	const [letsPlay, { stop: stopPlay }] = useSound(play, { volume: 0.03 })
+	const [correctAnswer, { stop: stopCorrect }] = useSound(correct, {
+		volume: 0.03,
+	})
+	const [wrongAnswer, { stop: stopWrong }] = useSound(wrong, { volume: 0.03 })
+	const [waitForAnswer, { stop: stopWait }] = useSound(wait, { volume: 0.03 })
+
+	const musicObj = {
+		letsPlay,
+		stopPlay,
+		correctAnswer,
+		stopCorrect,
+		wrongAnswer,
+		stopWrong,
+		waitForAnswer,
+		stopWait,
+	}
 
 	const data = [
 		{
@@ -125,6 +148,7 @@ function App() {
 										setStop={setStop}
 										questionNumber={questionNumber}
 										setQuestionNumber={setQuestionNumber}
+										musicObj={musicObj}
 									/>
 								</div>
 							</>
