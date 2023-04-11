@@ -22,6 +22,13 @@ function App() {
 	const [wrongAnswer, { stop: stopWrong }] = useSound(wrong, { volume: 0.03 })
 	const [waitForAnswer, { stop: stopWait }] = useSound(wait, { volume: 0.03 })
 
+	const [musicEnd, setMusicEnd] = useState({
+		playEnd: false,
+		waitEnd: false,
+		correctEnd: false,
+		wrongEnd: false,
+	})
+
 	const musicObj = {
 		letsPlay,
 		stopPlay,
@@ -139,7 +146,13 @@ function App() {
 							<>
 								<div className='top'>
 									<div className='timer'>
-										<Timer setStop={setStop} questionNumber={questionNumber} />
+										<Timer
+											setStop={setStop}
+											questionNumber={questionNumber}
+											musicObj={musicObj}
+											musicEnd={musicEnd}
+											setMusicEnd={setMusicEnd}
+										/>
 									</div>
 								</div>
 								<div className='bottom'>
@@ -149,6 +162,8 @@ function App() {
 										questionNumber={questionNumber}
 										setQuestionNumber={setQuestionNumber}
 										musicObj={musicObj}
+										musicEnd={musicEnd}
+										setMusicEnd={setMusicEnd}
 									/>
 								</div>
 							</>

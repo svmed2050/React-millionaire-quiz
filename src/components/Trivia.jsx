@@ -6,17 +6,22 @@ const Trivia = ({
 	questionNumber,
 	setQuestionNumber,
 	musicObj,
+	setMusicEnd,
+	musicEnd,
 }) => {
 	const [question, setQuestion] = useState(null)
 	const [selectedAnswer, setSelectedAnswer] = useState(null)
 	const [className, setClassName] = useState('answer')
 
 	useEffect(() => {
-		musicObj.letsPlay()
-		setTimeout(() => {
-			musicObj.stopPlay()
-		}, 4500)
-	}, [])
+		if (!musicEnd.playEnd) {
+			musicObj.letsPlay()
+			setTimeout(() => {
+				musicObj.stopPlay()
+				setMusicEnd({ ...musicEnd, playEnd: true })
+			}, 4500)
+		}
+	}, [musicObj, musicEnd, setMusicEnd])
 
 	useEffect(() => {
 		setQuestion(data[questionNumber - 1])
@@ -37,12 +42,16 @@ const Trivia = ({
 		)
 		delay(5000, () => {
 			if (a.correct) {
+				setMusicEnd({ ...musicEnd, waitEnd: true })
+				musicObj.stopWait()
 				musicObj.correctAnswer()
+				setMusicEnd({ ...musicEnd, waitEnd: false })
 				delay(1000, () => {
 					setQuestionNumber((prev) => prev + 1)
 					setSelectedAnswer(null)
 				})
 			} else {
+				musicObj.stopWait()
 				musicObj.wrongAnswer()
 				delay(1000, () => {
 					setStop(true)
