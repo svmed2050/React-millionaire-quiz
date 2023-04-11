@@ -1,7 +1,15 @@
-import React from 'react'
-
 const Trivia = () => {
-	return <div>Trivia</div>
+	return (
+		<div className='trivia'>
+			<div className='question'>What's the best youtube channel?</div>
+			<div className='answers'>
+				<div className='answer'>Lama Dev</div>
+				<div className='answer'>Lama Dev</div>
+				<div className='answer'>Lama Dev</div>
+				<div className='answer'>Lama Dev</div>
+			</div>
+		</div>
+	)
 }
 
 export default Trivia
