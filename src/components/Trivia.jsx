@@ -9,13 +9,18 @@ const Trivia = ({ data, setStop, questionNumber, setQuestionNumber }) => {
 	const [question, setQuestion] = useState(null)
 	const [selectedAnswer, setSelectedAnswer] = useState(null)
 	const [className, setClassName] = useState('answer')
-	const [letsPlay] = useSound(play, { volume: 0.03 })
-	const [correctAnswer] = useSound(correct, { volume: 0.03 })
-	const [wrongAnswer] = useSound(wrong, { volume: 0.03 })
-	const [waitForAnswer] = useSound(wait, { volume: 0.03 })
+	const [letsPlay, { stop: stopPlay }] = useSound(play, { volume: 0.03 })
+	const [correctAnswer, { stop: stopCorrect }] = useSound(correct, {
+		volume: 0.03,
+	})
+	const [wrongAnswer, { stop: stopWrong }] = useSound(wrong, { volume: 0.03 })
+	const [waitForAnswer, { stop: stopWait }] = useSound(wait, { volume: 0.03 })
 
 	useEffect(() => {
 		letsPlay()
+		setTimeout(() => {
+			stopPlay()
+		}, 4500)
 	}, [letsPlay])
 
 	useEffect(() => {
