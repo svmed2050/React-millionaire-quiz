@@ -12,52 +12,63 @@ const Trivia = ({
 	const [question, setQuestion] = useState(null)
 	const [selectedAnswer, setSelectedAnswer] = useState(null)
 	const [className, setClassName] = useState('answer')
+	const [onClickCounter, setOnClickCounter] = useState(0)
 
 	useEffect(() => {
+		if (onClickCounter) return
+
 		if (!musicEnd.playEnd) {
 			musicObj.letsPlay()
-			setTimeout(() => {
-				musicObj.stopPlay()
-				setMusicEnd({ ...musicEnd, playEnd: true })
-			}, 4500)
+			musicObj.waitForAnswer()
 		}
-	}, [musicObj, musicEnd, setMusicEnd])
+	}, [musicObj, musicEnd, setMusicEnd, onClickCounter])
 
 	useEffect(() => {
 		setQuestion(data[questionNumber - 1])
 	}, [data, questionNumber])
 
 	const delay = (duration, callback) => {
-		setTimeout(() => {
+		let timerID
+		timerID = setTimeout(() => {
 			callback()
+			clearTimeout(timerID)
 		}, duration)
 	}
 
 	const handleClick = (a) => {
-		setSelectedAnswer(a)
-		setClassName('answer active')
+		if (!onClickCounter) {
+			setOnClickCounter(1)
 
-		delay(2500, () =>
-			setClassName(a.correct ? 'answer correct' : 'answer wrong')
-		)
-		delay(5000, () => {
-			if (a.correct) {
-				setMusicEnd({ ...musicEnd, waitEnd: true })
-				musicObj.stopWait()
-				musicObj.correctAnswer()
-				setMusicEnd({ ...musicEnd, waitEnd: false })
-				delay(1000, () => {
-					setQuestionNumber((prev) => prev + 1)
-					setSelectedAnswer(null)
-				})
-			} else {
-				musicObj.stopWait()
-				musicObj.wrongAnswer()
-				delay(1000, () => {
-					setStop(true)
-				})
-			}
-		})
+			setSelectedAnswer(a)
+			setClassName('answer active')
+
+			musicObj.stopWait()
+
+			delay(2500, () => {
+				setClassName(a.correct ? 'answer correct' : 'answer wrong')
+				console.log(className)
+			})
+
+			delay(5000, () => {
+				if (a.correct) {
+					setMusicEnd({ ...musicEnd, waitEnd: true, playEnd: true })
+					musicObj.stopWait()
+					musicObj.correctAnswer()
+					setMusicEnd({ ...musicEnd, waitEnd: false, playEnd: true })
+					delay(1000, () => {
+						setQuestionNumber((prev) => prev + 1)
+						setSelectedAnswer(null)
+					})
+				} else {
+					musicObj.stopWait()
+					musicObj.wrongAnswer()
+					delay(1000, () => {
+						setStop(true)
+					})
+				}
+				setOnClickCounter(0)
+			})
+		}
 	}
 
 	return (

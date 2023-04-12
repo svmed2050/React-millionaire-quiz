@@ -30,7 +30,7 @@ const Timer = ({
 		if (musicEnd.playEnd && !musicEnd.waitEnd) {
 			musicObj.waitForAnswer()
 		}
-	}, [musicObj, musicEnd])
+	}, [musicObj, musicEnd, setMusicEnd])
 
 	return timer
 }
