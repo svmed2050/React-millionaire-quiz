@@ -153,6 +153,7 @@
   right: 0;
   margin: auto;
   width: 500px;
+  transform: translateX(-7%);
 }
 
 .start {
@@ -192,7 +193,8 @@
   font-size: 18px;
   font-weight: 500;
   transition: 0.2s ease-in-out;
-  transform: scale(1.01)
+  transform: scale(1.01);
+  margin: 0 auto;
 }
 
 .startButton:active {
