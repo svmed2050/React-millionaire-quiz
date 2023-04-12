@@ -66,6 +66,8 @@ const Trivia = ({
 						setStop(true)
 					})
 				}
+			})
+			delay(6000, () => {
 				setOnClickCounter(0)
 			})
 		}

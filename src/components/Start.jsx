@@ -13,6 +13,11 @@ export default function Start({ setUsername }) {
 				placeholder='enter your name'
 				className='startInput'
 				ref={inputRef}
+				onKeyDown={(event) => {
+					if (event.code === 'Enter') {
+						handleClick()
+					}
+				}}
 			/>
 			<button className='startButton' onClick={handleClick}>
 				Start

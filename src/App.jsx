@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
-import './app.css'
+import { rawData } from './data.js'
+
 import Trivia from './components/Trivia'
 import Timer from './components/Timer'
 import Start from './components/Start'
@@ -9,8 +10,25 @@ import correct from './sounds/correct.mp3'
 import play from './sounds/play.mp3'
 import wait from './sounds/wait.mp3'
 import wrong from './sounds/wrong.mp3'
+import './app.css'
 
 function App() {
+	function shuffle(array) {
+		let currentIndex = array.length
+		let randomIndex
+
+		while (currentIndex !== 1) {
+			randomIndex = Math.floor(Math.random() * currentIndex)
+			currentIndex--
+			;[array[currentIndex], array[randomIndex]] = [
+				array[randomIndex],
+				array[currentIndex],
+			]
+		}
+
+		return array
+	}
+
 	const [username, setUsername] = useState(null)
 	const [questionNumber, setQuestionNumber] = useState(1)
 	const [stop, setStop] = useState(false)
@@ -40,75 +58,6 @@ function App() {
 		stopWait,
 	}
 
-	const data = [
-		{
-			id: 1,
-			question: 'Rolex is a company that specializes in what type of product?',
-			answers: [
-				{
-					text: 'Phone',
-					correct: false,
-				},
-				{
-					text: 'Watches',
-					correct: true,
-				},
-				{
-					text: 'Food',
-					correct: false,
-				},
-				{
-					text: 'Cosmetic',
-					correct: false,
-				},
-			],
-		},
-		{
-			id: 2,
-			question: 'When did the website `Facebook` launch?',
-			answers: [
-				{
-					text: '2004',
-					correct: true,
-				},
-				{
-					text: '2005',
-					correct: false,
-				},
-				{
-					text: '2006',
-					correct: false,
-				},
-				{
-					text: '2007',
-					correct: false,
-				},
-			],
-		},
-		{
-			id: 3,
-			question: 'Who played the character of harry potter in movie?',
-			answers: [
-				{
-					text: 'Johnny Deep',
-					correct: false,
-				},
-				{
-					text: 'Leonardo Di Caprio',
-					correct: false,
-				},
-				{
-					text: 'Denzel Washington',
-					correct: false,
-				},
-				{
-					text: 'Daniel Red Cliff',
-					correct: true,
-				},
-			],
-		},
-	]
-
 	const moneyPyramid = useMemo(() => {
 		return [
 			{ id: 1, amount: '$ 100' },
@@ -129,6 +78,12 @@ function App() {
 		].reverse()
 	}, [])
 
+	const [data, setData] = useState(rawData)
+	useEffect(() => {
+		setData(shuffle(data))
+		console.log(data)
+	}, [setData, data])
+
 	useEffect(() => {
 		questionNumber > 1 &&
 			setEarned(moneyPyramid.find((m) => m.id === questionNumber - 1).amount)
@@ -141,7 +96,17 @@ function App() {
 					{' '}
 					<div className='main'>
 						{stop ? (
-							<h1 className='endText'>You earned: {earned}</h1>
+							<>
+								<div className='start'>
+									<h1 className='endText'>You've earned: {earned}</h1>
+									<button
+										className='startButton'
+										onClick={() => window.location.reload()}
+									>
+										Start again
+									</button>
+								</div>
+							</>
 						) : (
 							<>
 								<div className='top'>
